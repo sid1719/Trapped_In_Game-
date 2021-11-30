@@ -8,9 +8,7 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-	//This class holds a static reference to itself to ensure that there will only be
-	//one in existence. This is often referred to as a "singleton" design pattern. Other
-	//scripts access this one through its public static methods
+	
 	static GameManager current;
 
 	public float deathSequenceDuration = 1.5f;	//How long player death takes before restarting
@@ -21,9 +19,9 @@ public class GameManager : MonoBehaviour
 
 	int numberOfDeaths;							//Number of times player has died
 	float totalGameTime;						//Length of the total game time
-	bool isGameOver;							//Is the game currently over?
+	bool isGameOver;                            //Is the game currently over?
 
-
+	int loader;
 	void Awake()
 	{
 		//If a Game Manager exists and this isn't it...
@@ -42,6 +40,7 @@ public class GameManager : MonoBehaviour
 
 		//Persis this object between scene reloads
 		DontDestroyOnLoad(gameObject);
+
 	}
 
 	void Update()
@@ -115,6 +114,8 @@ public class GameManager : MonoBehaviour
 		//If there are no more orbs, tell the door to open
 		if (current.orbs.Count == 0)
 			current.lockedDoor.Open();
+		  
+		    
 
 		//Tell the UIManager to update the orb text
 		UIManager.UpdateOrbUI(current.orbs.Count);
@@ -149,8 +150,10 @@ public class GameManager : MonoBehaviour
 
 		//Tell UI Manager to show the game over text and tell the Audio Manager to play
 		//game over audio
-		UIManager.DisplayGameOverText();
+		//UIManager.DisplayGameOverText();
 		AudioManager.PlayWonAudio();
+		
+		current.Invoke("LoadScene",2);
 	}
 
 	void RestartScene()
@@ -162,6 +165,14 @@ public class GameManager : MonoBehaviour
 		AudioManager.PlaySceneRestartAudio();
 
 		//Reload the current scene
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
+		
+		 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
 	}
+
+	void LoadScene()
+    {
+		//SceneManager.UnloadSceneAsync("Level 1");
+		SceneManager.LoadScene("Level 2");
+		
+    }
 }

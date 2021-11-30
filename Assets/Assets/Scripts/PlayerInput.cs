@@ -1,19 +1,11 @@
-﻿// This script handles inputs for the player. It serves two main purposes: 1) wrap up
-// inputs so swapping between mobile and standalone is simpler and 2) keeping inputs
-// from Update() in sync with FixedUpdate()
-
-using UnityEngine;
+﻿using UnityEngine;
 
 //We first ensure this script runs before all other player scripts to prevent laggy
 //inputs
 [DefaultExecutionOrder(-100)]
 public class PlayerInput : MonoBehaviour
 {
-	public bool testTouchControlsInEditor = false;	//Should touch controls be tested?
-	public float verticalDPadThreshold = .5f;		//Threshold touch pad inputs
-	public Thumbstick thumbstick;					//Reference to Thumbstick
-	public TouchButton jumpButton;					//Reference to jump TouchButton
-
+	
 	[HideInInspector] public float horizontal;		//Float that stores horizontal input
 	[HideInInspector] public bool jumpHeld;			//Bool that stores jump pressed
 	[HideInInspector] public bool jumpPressed;		//Bool that stores jump held
@@ -36,7 +28,7 @@ public class PlayerInput : MonoBehaviour
 		//Process keyboard, mouse, gamepad (etc) inputs
 		ProcessInputs();
 		//Process mobile (touch) inputs
-		ProcessTouchInputs();
+	
 
 		//Clamp the horizontal input to be between -1 and 1
 		horizontal = Mathf.Clamp(horizontal, -1f, 1f);
@@ -78,29 +70,5 @@ public class PlayerInput : MonoBehaviour
 		crouchHeld		= crouchHeld || Input.GetButton("Crouch");
 	}
 
-	void ProcessTouchInputs()
-	{
-		//If this isn't a mobile platform AND we aren't testing in editor, exit
-		if (!Application.isMobilePlatform && !testTouchControlsInEditor)
-			return;
-
-		//Record inputs from screen thumbstick
-		Vector2 thumbstickInput = thumbstick.GetDirection();
-
-		//Accumulate horizontal input
-		horizontal		+= thumbstickInput.x;
-
-		//Accumulate jump button input
-		jumpPressed		= jumpPressed || jumpButton.GetButtonDown();
-		jumpHeld		= jumpHeld || jumpButton.GetButton();
-
-		//Using thumbstick, accumulate crouch input
-		bool dPadCrouch = thumbstickInput.y <= -verticalDPadThreshold;
-		crouchPressed	= crouchPressed || (dPadCrouch && !dPadCrouchPrev);
-		crouchHeld		= crouchHeld || dPadCrouch;
-
-		//Record whether or not playing is crouching this frame (used for determining
-		//if button is pressed for first time or held
-		dPadCrouchPrev	= dPadCrouch;
-	}
+	
 }

@@ -60,7 +60,7 @@ public class AudioManager : MonoBehaviour
 
 		//This is the current AudioManager and it should persist between scene loads
 		current = this;
-		DontDestroyOnLoad(gameObject);
+		//DontDestroyOnLoad(gameObject);
 
 		//Generate the Audio Source "channels" for our game's audio
 		ambientSource	= gameObject.AddComponent<AudioSource>() as AudioSource;
